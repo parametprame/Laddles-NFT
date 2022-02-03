@@ -33,7 +33,7 @@ export const Hero = () => {
 
   async function claimNFTs() {
     if (active && account && !errMsg) {
-      const totalCostWei =  (20000000000000000 * mintAmount).toString();
+      const totalCostWei = (20000000000000000 * mintAmount).toString();
       const totalGasLimit = (285000 * mintAmount).toString();
       setMessage("");
       setIsPending(true);
@@ -68,7 +68,6 @@ export const Hero = () => {
     }
   }
 
-
   useEffect(() => {
     async function fetchTotalSupply() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -83,10 +82,9 @@ export const Hero = () => {
     }
 
     const intervalId = setInterval(() => {
-      fetchTotalSupply()
-    }, 500) // in milliseconds
-    return () => clearInterval(intervalId)
-    
+      fetchTotalSupply();
+    }, 500); // in milliseconds
+    return () => clearInterval(intervalId);
   }, [active, chainId, totalSupply]);
 
   const notify = toast.custom(
@@ -110,7 +108,7 @@ export const Hero = () => {
 
   return (
     <>
-      <section className="relative  w-full h-full bg-black">
+      <section className="relative w-full h-full bg-black">
         {errMsg ? (
           <>
             {" "}
@@ -179,7 +177,7 @@ export const Hero = () => {
           </div>
         </div>
       </section>
-      <section className="flex pt-12 w-full h-screen sm:h-full bg-black ">
+      <section className="flex pt-3 xl:pt-12 w-full h-full bg-black ">
         <div className="container mx-auto px-4 my-10">
           <div className="items-center flex flex-wrap">
             <div className="w-full md:w-6/12 ml-auto mr-auto px-4">
@@ -191,14 +189,16 @@ export const Hero = () => {
             </div>
             <div className="w-full md:w-6/12 ml-auto mr-auto px-4">
               <div className="md:pr-12">
-                <h3 className="text-3xl text-white">Laddles</h3>
-                <p className="mt-4 text-lg leading-relaxed text-blueGray-500 text-white">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-
+                <div className="my-10 xl:my-0">
+                  <h3 className="text-3xl text-white">Laddles</h3>
+                  <p className="mt-4 text-lg leading-relaxed text-blueGray-500 text-white">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit, sed do eiusmod tempor incididunt ut labore et dolore
+                    magna aliqua.
+                  </p>
+                </div>
                 <h3 className="text-3xl text-white text-center py-3">
                   Cost 0.02 ETH
                 </h3>
@@ -279,16 +279,16 @@ export const Hero = () => {
           </div>
         </div>
       </section>
-      <section className="flex pt-12 w-full h-full sm:h-full bg-black">
+      <section className="flex pt-3 xl:pt-12 w-full h-full bg-black">
         <div className="container mx-auto px-4 my-10">
           <div className="grid grid-cols-1 gap-4">
             <div className="text-white  text-center">
-              <p className="tracking-widest xl:text-7xl lg:text-5xl md:text-2xl	 sm:text-2xl font-bold">
+              <p className="tracking-widest text-2xl xl:text-7xl lg:text-5xl font-bold">
                 FAQ
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 mt-20">
+          <div className="grid grid-cols-2 gap-4 mt-10 xl:mt-20">
             <div className="flex justify-center">
               <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
                 <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">

@@ -12,7 +12,7 @@ export const MyNFTs = () => {
     async function fetchMyNFTs() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xa632D4028fb12c4D53c5cEDa08188b949427Da6f",
+        "0xb078b1271d5b118aeffd2390d16183eb47d416fc",
         ABI,
         provider
       );
@@ -29,7 +29,7 @@ export const MyNFTs = () => {
       const numberIndex = parseInt(data._hex, 16);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xa632D4028fb12c4D53c5cEDa08188b949427Da6f",
+        "0xb078b1271d5b118aeffd2390d16183eb47d416fc",
         ABI,
         provider
       );
@@ -40,7 +40,6 @@ export const MyNFTs = () => {
     }
   }
 
-  console.log(mydataNFT);
 
   return (
     <>

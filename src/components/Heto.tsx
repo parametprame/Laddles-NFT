@@ -33,7 +33,7 @@ export const Hero = () => {
 
   async function claimNFTs() {
     if (active && account && !errMsg) {
-      const totalCostWei =  totalSupply < 10 ? 0 : (20000000000000000 * mintAmount).toString();
+      const totalCostWei =  (20000000000000000 * mintAmount).toString();
       const totalGasLimit = (285000 * mintAmount).toString();
       setMessage("");
       setIsPending(true);
@@ -41,7 +41,7 @@ export const Hero = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(
-          "0xa632D4028fb12c4D53c5cEDa08188b949427Da6f",
+          "0xb078b1271d5b118aeffd2390d16183eb47d416fc",
           ABI,
           signer
         );
@@ -73,7 +73,7 @@ export const Hero = () => {
     async function fetchTotalSupply() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xa632D4028fb12c4D53c5cEDa08188b949427Da6f",
+        "0xb078b1271d5b118aeffd2390d16183eb47d416fc",
         ABI,
         provider
       );

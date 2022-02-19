@@ -1,9 +1,10 @@
 import ABI from "../contract/abi.json";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import axios from "axios";
-
+import CheckApprove from "./CheckApprove";
 export const MyNFTs = () => {
   const { account } = useWeb3React();
   const [mydataNFT, setNFTs] = useState<Array<any>>([]);
@@ -17,7 +18,6 @@ export const MyNFTs = () => {
         provider
       );
       const myNFTs = await contract.walletOfOwner(account);
-
       myNFTs.map((data: any) => decodeData(data));
     }
 
@@ -40,7 +40,6 @@ export const MyNFTs = () => {
     }
   }
 
-
   return (
     <>
       <header className="bg-white shadow">
@@ -54,21 +53,23 @@ export const MyNFTs = () => {
             <div className="border-4 border-dashed border-gray-500 rounded-lg h-max">
               <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {mydataNFT?.map((data) => (
-                  <div className="rounded overflow-hidden shadow-lg">
+                  <div className="rounded overflow-hidden shadow-lg flex flex-col">
                     <img
                       className="w-full"
                       src={`https://ipfs.io/ipfs/${data.image.slice(7)}`}
-                      alt="Mountain"
+                      alt="nft"
                     />
                     <div className="px-6 py-4">
                       <div className="font-bold text-xl mb-2">{data.name}</div>
                     </div>
-                    <div className="px-6 pt-4 pb-2">
-                      {data?.attributes?.map((att : any) => (
-                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                          {att.trait_type} : {att.value}
-                        </span>
-                      ))}
+                    <div>
+                      <Link to={`/viewnft/${data.edition}`}>
+                      <button
+                        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded w-full"
+                      >
+                        View 
+                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}

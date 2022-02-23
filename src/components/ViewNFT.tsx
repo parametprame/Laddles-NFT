@@ -48,7 +48,7 @@ export const ViewNFT = (props: any) => {
         </div>
       </header>
       <main>
-        <div className="container mx-auto mt-10 ">
+        <div className="container mx-auto mt-10 py-6 px-4 sm:px-6 lg:px-8">
           <div className="flex grid grid-cols-2 gap-10 justify-center">
             <div className="row-span-2">
               <img
@@ -63,15 +63,13 @@ export const ViewNFT = (props: any) => {
                     <h1 className="font-bold text-2xl text-gray-700 w-full text-center">
                       List Price
                     </h1>
-                    <p className="text-sm text-gray-500 text-center w-full">
-                      ใส่เป็นจำนวนเต็มเท่านั้น ห้ามทศนิยม
-                    </p>
                     <input
                       type="number"
                       placeholder="Price (ETH)"
                       className="border-2 rounded-lg w-full h-12 px-4"
                       min="1"
                       name="price"
+                      step="0.01"
                       onChange={(e) => setPrice(e.target.value)}
                     />
                     <CheckApprove tokenId={id}  price={price}/>

@@ -32,32 +32,32 @@ export const BuyNFT = () => {
     async function fetchItemInMarketplace() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        contractMarketplace,
+        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
         ABI_MARKET,
         provider
       );
       const items = await contract.getListings();
       items?.map((item: any, index: any) => {
-        if (DecodeHexToDecimal(item?.tokenId._hex).toString() == id) {
+        if (DecodeHexToDecimal(item?.tokenId._hex).toString() === id && item?.status === 0) {
           decodeData(item, index + 1);
           fetchOffer(index + 1);
         }
       });
     }
+    fetchItemInMarketplace();
+  }, []);
 
-    async function fetchOffer(index: any) {
+
+  async function fetchOffer(index: any) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        contractMarketplace,
+        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
         ABI_MARKET,
         provider
       );
       const offers = await contract.showOfferforListitem(index);
       setOffers(offers);
-    }
-
-    fetchItemInMarketplace();
-  }, []);
+  }
 
   async function decodeData(data: any, index: any) {
     {

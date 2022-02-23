@@ -54,7 +54,7 @@ export const MyNFTForsale = (props: any) => {
       items.map((data: any, index: any) => {
         if (data[0] !== 1 && data[0] !== 2) {
           const checktoken = DecodeHexToDecimal(data.tokenId._hex);
-          if (checktoken.toString() == tokenId) {
+          if (checktoken.toString() === tokenId) {
             decodeDataForsale(data);
           }
         }
@@ -84,6 +84,7 @@ export const MyNFTForsale = (props: any) => {
   };
 
   const AcceptOffer = async (index: any) => {
+     
     if (active && account && !errMsg) {
         setIsPending(true);
         try {
@@ -266,8 +267,8 @@ export const MyNFTForsale = (props: any) => {
                               {DecodeHexToDecimal(item[1]._hex) / 10 ** 9} ETH
                             </td>
                             <td className="py-4 px-6 text-sm text-center font-medium text-gray-500 whitespace-nowrap dark:text-white">
-                              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={() => {AcceptOffer(index)}}>
-                                Accept
+                              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={() => {AcceptOffer(index + 1)}}>
+                                Accept 
                               </button>
                             </td>
                           </tr>

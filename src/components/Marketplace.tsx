@@ -12,13 +12,13 @@ export const Marketplace = () => {
     async function fetchItemInMarketplace() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0x2dC2635952F135E4a49a12d01655eBb6eb6F77A0",
+        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
         ABI_MARKET,
         provider
       );
       const items = await contract.getListings();
       items.map((data: any) => {
-        if(data[0] !== 1) {
+        if(data[0] !== 1 && data[0] !== 2) {
           decodeData(data)
         }
       });
@@ -91,7 +91,7 @@ export const Marketplace = () => {
                           Price :{" "}
                           <span className="font-normal text-sm	">
                             {DecodeHexToDecimal(Object(item).data.price._hex) /
-                              1000000000000000000}{" "}
+                              10**9}{" "}
                             ETH
                           </span>
                         </p>

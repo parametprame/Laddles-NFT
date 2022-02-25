@@ -14,7 +14,7 @@ const CheckApprove = (props: any) => {
   const { chainId, account, active, library } = useWeb3React();
   const [isPending, setIsPending] = useState(false);
   const { message, errMsg, setMessage } = useContractContext();
-  const address = "0x2dC2635952F135E4a49a12d01655eBb6eb6F77A0";
+  const address = "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977";
   const addressNFT = "0xb078b1271d5b118aeffd2390d16183eb47d416fc";
 
   useEffect(() => {
@@ -64,19 +64,20 @@ const CheckApprove = (props: any) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(
-          "0x2dC2635952F135E4a49a12d01655eBb6eb6F77A0",
+          "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
           MARKET_ABI,
           signer
         );
         const transaction = await contract.listToken(
           addressNFT,
           tokenId,
-          price
+          price * 10 ** 9
         );
         await transaction.wait();
         setIsPending(false);
         window.location.replace("/mynfts");
       } catch (err) {
+        console.log(err)
         setIsPending(false);
       }
     }

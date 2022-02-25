@@ -123,7 +123,7 @@ export const Hero = () => {
                 Powered by
                 <span className="text-blue-600/100 text-2xl tracking-widest">
                   {" "}
-                  Inwdroid{" "}
+                  Paramet Kongjaroen{" "}
                 </span>{" "}
               </p>
             </div>

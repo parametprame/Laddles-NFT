@@ -163,7 +163,7 @@ export const BuyNFT = () => {
     }
   };
 
-  if (loading) return <>...losding</>;
+  if (loading) return <>...loading</>;
 
   return (
     <>

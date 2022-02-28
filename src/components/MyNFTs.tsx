@@ -67,7 +67,7 @@ export const MyNFTs = () => {
     async function fetchItemInMarketplace() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
+        "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b",
         ABI_MARKET,
         provider
       );

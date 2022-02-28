@@ -6,7 +6,20 @@ import ABI from "../contract/abi.json";
 import { ethers } from "ethers";
 import axios from "axios";
 import { useContractContext } from "../context/contract";
+import { gql, useQuery } from "@apollo/client";
 
+const HSITORIES_NFT = gql`
+  query historyNFt($tokenId: String!) {
+    historyNFt(id: $tokenId) {
+      id
+      sales {
+        buyer
+        seller
+        price
+      }
+    }
+  }
+`;
 
 export const BuyNFT = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -20,7 +33,7 @@ export const BuyNFT = () => {
   const [offerPrice, setPriceOffer] = useState("");
   let { id } = useParams();
   const [showModal, setShowModal] = useState(false);
-  const contractMarketplace = "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977";
+  const contractMarketplace = "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b";
   const contractToken = "0xb078b1271d5b118aeffd2390d16183eb47d416fc";
 
   const DecodeHexToDecimal = (_hex: any) => {
@@ -28,17 +41,28 @@ export const BuyNFT = () => {
     return number;
   };
 
+  const encode = ethers.BigNumber.from(id);
+  const tokenId = encode._hex;
+  const { loading, error, data } = useQuery(HSITORIES_NFT, {
+    variables: {
+      tokenId,
+    },
+  });
+
   useEffect(() => {
     async function fetchItemInMarketplace() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
+        "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b",
         ABI_MARKET,
         provider
       );
       const items = await contract.getListings();
       items?.map((item: any, index: any) => {
-        if (DecodeHexToDecimal(item?.tokenId._hex).toString() === id && item?.status === 0) {
+        if (
+          DecodeHexToDecimal(item?.tokenId._hex).toString() === id &&
+          item?.status === 0
+        ) {
           decodeData(item, index + 1);
           fetchOffer(index + 1);
         }
@@ -47,16 +71,15 @@ export const BuyNFT = () => {
     fetchItemInMarketplace();
   }, []);
 
-
   async function fetchOffer(index: any) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(
-        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
-        ABI_MARKET,
-        provider
-      );
-      const offers = await contract.showOfferforListitem(index);
-      setOffers(offers);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(
+      "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b",
+      ABI_MARKET,
+      provider
+    );
+    const offers = await contract.showOfferforListitem(index);
+    setOffers(offers);
   }
 
   async function decodeData(data: any, index: any) {
@@ -84,8 +107,8 @@ export const BuyNFT = () => {
   };
 
   const BuyNFT = async (index: any) => {
-    const price = DecodeHexToDecimal(index.data.price._hex);
-    const totalCostWei = (price * 10 ** 9).toString();
+    const price = DecodeHexToDecimal(index.data.price._hex).toString();
+    const totalCostWei = ethers.utils.parseUnits(price, "gwei");
     const totalGasLimit = "285000";
     if (active && account && !errMsg) {
       setIsPending(true);
@@ -111,9 +134,10 @@ export const BuyNFT = () => {
   };
 
   const MakeOffer = async (index: any) => {
-    const listingId = index.index.toString()
-    const price = (parseFloat(offerPrice) * 10 ** 9).toString();
-    const totalCostWei = (parseFloat(offerPrice) * 10 ** 18).toString();
+    const listingId = index.index.toString();
+    const price = ethers.utils.parseUnits(offerPrice, "gwei");
+
+    const totalCostWei = ethers.utils.parseUnits(offerPrice, 18);
     const totalGasLimit = "3000000";
     if (active && account && !errMsg) {
       setIsPendingOffer(true);
@@ -125,14 +149,10 @@ export const BuyNFT = () => {
           ABI_MARKET,
           signer
         );
-        const transaction = await contract.offer(
-          price,
-          listingId,
-          {
-            value: totalCostWei,
-            gasLimit: totalGasLimit,
-          }
-        );
+        const transaction = await contract.offer(price, listingId, {
+          value: totalCostWei,
+          gasLimit: totalGasLimit,
+        });
         await transaction.wait();
         window.location.reload();
         setIsPendingOffer(false);
@@ -142,6 +162,8 @@ export const BuyNFT = () => {
       }
     }
   };
+
+  if (loading) return <>...losding</>;
 
   return (
     <>
@@ -169,8 +191,10 @@ export const BuyNFT = () => {
                       </h3>
                       <h1 className="font-bold text-2xl text-gray-700 w-full text-center">
                         Price :{" "}
-                        {DecodeHexToDecimal(Object(item).data.price._hex) /
-                          10 ** 9}{" "}
+                        {ethers.utils.formatUnits(
+                          Object(item).data.price._hex,
+                          "gwei"
+                        )}{" "}
                         ETH
                       </h1>
                       {isPending ? (
@@ -325,7 +349,7 @@ export const BuyNFT = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col col-span-2 pd-5">
+                <div className="flex flex-col  pd-5">
                   <h1 className="font-bold text-2xl text-gray-700 w-full text-center mb-5">
                     {" "}
                     Offers{" "}
@@ -344,7 +368,7 @@ export const BuyNFT = () => {
                               </th>
                               <th
                                 scope="col"
-                                className= " text-center py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                                className=" text-center py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
                               >
                                 Price
                               </th>
@@ -354,10 +378,64 @@ export const BuyNFT = () => {
                             {offers.map((item) => (
                               <tr className="hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <td className="py-4 px-6 text-sm text-center font-medium text-gray-500 whitespace-nowrap dark:text-white">
-                                  {item[0]}
+                                  {item[0].slice(0, 5) +
+                                    "..." +
+                                    item[0].substring(item[0].length - 4)}
                                 </td>
                                 <td className="py-4 px-6 text-sm text-center font-medium text-gray-500 whitespace-nowrap dark:text-white">
-                                  {DecodeHexToDecimal(item[1]._hex) / 10 ** 9} ETH
+                                  {ethers.utils.formatUnits(
+                                    item[1]._hex,
+                                    "gwei"
+                                  )}{" "}
+                                  ETH
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col  pd-5">
+                  <h1 className="font-bold text-2xl text-gray-700 w-full text-center mb-5">
+                    {" "}
+                    Transaction history of Ladsdles NFT {id} #
+                  </h1>
+                  <div className="overflow-x-auto shadow-md sm:rounded-lg mb-30">
+                    <div className="inline-block min-w-full align-middle">
+                      <div className="overflow-hidden ">
+                        <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
+                          <thead className="bg-gray-100 dark:bg-gray-700">
+                            <tr>
+                              <th
+                                scope="col"
+                                className=" text-center py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                              >
+                                Buyer
+                              </th>
+                              <th
+                                scope="col"
+                                className=" text-center py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                              >
+                                Price
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                            {data?.historyNFt?.sales.slice(0).reverse().map((item: any) => (
+                              <tr className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <td className="py-4 px-6 text-sm text-center font-medium text-gray-500 whitespace-nowrap dark:text-white">
+                                  {item.buyer.slice(0, 5) +
+                                    "..." +
+                                    item.buyer.substring(item.buyer.length - 4)}
+                                </td>
+                                <td className="py-4 px-6 text-sm text-center font-medium text-gray-500 whitespace-nowrap dark:text-white">
+                                  {ethers.utils.formatUnits(
+                                    item.price,
+                                    "gwei"
+                                  )}
+                                   {" "}ETH
                                 </td>
                               </tr>
                             ))}

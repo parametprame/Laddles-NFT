@@ -41,7 +41,7 @@ export const Hero = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(
-          "0xb078b1271d5b118aeffd2390d16183eb47d416fc",
+          process.env.REACT_APP_CONTRACT_TOKEN!,
           ABI,
           signer
         );

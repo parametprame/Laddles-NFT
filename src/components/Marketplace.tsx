@@ -4,15 +4,38 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {
+  gql,
+  useQuery
+} from "@apollo/client";
+
+const LISTING_ENTIIES = gql`
+  query GetListing {
+  listingEntities(first: 5) {
+    id
+    listingId
+    seller
+    token
+    price
+  }
+}
+`
 
 export const Marketplace = () => {
+
+  
+
+  
   const [marketplace, setMarketplace] = useState<Array<Object>>([]);
+
+  const { loading, error, data } = useQuery(LISTING_ENTIIES);
+
 
   useEffect(() => {
     async function fetchItemInMarketplace() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
+        "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b",
         ABI_MARKET,
         provider
       );
@@ -90,8 +113,8 @@ export const Marketplace = () => {
                           {" "}
                           Price :{" "}
                           <span className="font-normal text-sm	">
-                            {DecodeHexToDecimal(Object(item).data.price._hex) /
-                              10**9}{" "}
+                            {ethers.utils.formatUnits(Object(item).data.price._hex, "gwei")}
+                            {" "}
                             ETH
                           </span>
                         </p>

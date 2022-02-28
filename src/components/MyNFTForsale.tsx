@@ -46,7 +46,7 @@ export const MyNFTForsale = (props: any) => {
     async function fetchItemInMarketplace() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
+        "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b",
         ABI_MARKET,
         provider
       );
@@ -64,7 +64,7 @@ export const MyNFTForsale = (props: any) => {
     async function fetchOffer() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
+        "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b",
         ABI_MARKET,
         provider
       );
@@ -84,26 +84,25 @@ export const MyNFTForsale = (props: any) => {
   };
 
   const AcceptOffer = async (index: any) => {
-     
     if (active && account && !errMsg) {
-        setIsPending(true);
-        try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const signer = provider.getSigner();
-          const contract = new ethers.Contract(
-            "0xD249EF5B03BE5aFEf933678Ae6A2fBE4C5788977",
-            ABI_MARKET,
-            signer
-          );
-          const transaction = await contract.acceptOffer(id, index.toString());
-          await transaction.wait();
-          setIsPending(false);
-          window.location.replace("/mynfts");
-        } catch (err) {
-          setIsPending(false);
-        }
+      setIsPending(true);
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(
+          "0xd76978ba8518D70f73A74e43Ec2e5bb4483DCc7b",
+          ABI_MARKET,
+          signer
+        );
+        const transaction = await contract.acceptOffer(id, index.toString());
+        await transaction.wait();
+        setIsPending(false);
+        window.location.replace("/mynfts");
+      } catch (err) {
+        setIsPending(false);
       }
-  }
+    }
+  };
 
   const CancelSelling = async (e: any) => {
     e.preventDefault();
@@ -267,9 +266,27 @@ export const MyNFTForsale = (props: any) => {
                               {DecodeHexToDecimal(item[1]._hex) / 10 ** 9} ETH
                             </td>
                             <td className="py-4 px-6 text-sm text-center font-medium text-gray-500 whitespace-nowrap dark:text-white">
-                              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={() => {AcceptOffer(index + 1)}}>
-                                Accept 
-                              </button>
+                              {isPending ? (
+                                <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                  <span
+                                    className="spinner-border spinner-border-sm mr-3"
+                                    role="status"
+                                    aria-hidden="true"
+                                  ></span>
+                                  {"  "}
+                                  {isPending && "Pending..."}
+                                  {!isPending && "Processing.."}
+                                </button>
+                              ) : (
+                                <button
+                                  className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                                  onClick={() => {
+                                    AcceptOffer(index + 1);
+                                  }}
+                                >
+                                  Accept
+                                </button>
+                              )}
                             </td>
                           </tr>
                         ))}

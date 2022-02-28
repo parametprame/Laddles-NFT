@@ -50,9 +50,40 @@
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Market.ListingStatus",
+        "name": "status",
+        "type": "uint8"
       }
     ],
     "name": "Listed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "offerer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Offered",
     "type": "event"
   },
   {
@@ -73,6 +104,12 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "token",
         "type": "address"
       },
@@ -87,6 +124,12 @@
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Market.ListingStatus",
+        "name": "status",
+        "type": "uint8"
       }
     ],
     "name": "Sale",

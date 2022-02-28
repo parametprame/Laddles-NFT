@@ -16,6 +16,12 @@ contract Market {
         uint price;
     }
 
+    event Offered (
+        address offerer,
+        uint price,
+        uint tokenId
+    );
+
 	struct Listing {
 		ListingStatus status;
 		address seller;
@@ -29,16 +35,20 @@ contract Market {
 		address seller,
 		address token,
 		uint tokenId,
-		uint price
-	);
+		uint price,
+        ListingStatus status	
+    );
 
 	event Sale(
 		uint listingId,
 		address buyer,
+        address seller,
 		address token,
 		uint tokenId,
-		uint price
+		uint price,
+        ListingStatus status
 	);
+
 
 	event Cancel(
 		uint listingId,
@@ -74,7 +84,8 @@ contract Market {
 			msg.sender,
 			token,
 			tokenId,
-			price
+			price,
+            ListingStatus.Active
 		);
 	}
 
@@ -104,9 +115,11 @@ contract Market {
 		emit Sale(
 			listingId,
 			msg.sender,
+            listing.seller,
 			listing.token,
 			listing.tokenId,
-			listing.price
+			listing.price,
+            ListingStatus.Sold
 		);
 	}
 
@@ -142,6 +155,8 @@ contract Market {
             _price
         ) ;
 
+        emit Offered(msg.sender, _price, listingId);
+
 		if(countingOffer[listingId] == 0 ) {
 			offeringId++;
 			countingOffer[listingId] ++ ;
@@ -167,6 +182,16 @@ contract Market {
                 listing.status = ListingStatus.Sold;
                 IERC721(listing.token).transferFrom(address(this),  offerpeoples.offerer, listing.tokenId);
                 payable(listing.seller).transfer(offerpeoples.price * 10 ** 9);
+
+                emit Sale(
+			        listingId,
+			        offerpeoples.offerer,
+                    listing.seller,
+			        listing.token,
+			        listing.tokenId,
+			        offerpeoples.price,
+                    ListingStatus.Sold
+		        );
             }else {
                 payable(offerpeoples.offerer).transfer(offerpeoples.price * 10 ** 9);
             }
